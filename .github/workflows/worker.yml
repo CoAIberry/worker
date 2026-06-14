@@ -19,7 +19,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests httpx pydantic
 
-       scrimmage-execute:
+      - name: Scrimmage Execute Memory Pipeline
         env:
           # Context parameters passed from Hugging Face
           USER_PROMPT: ${{ github.event.client_payload.prompt }}
