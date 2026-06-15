@@ -19,6 +19,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests httpx pydantic
 
+      - name: Mock Kaggle Environment
+        run: |
+          # Create the directory structure with root privileges
+          sudo mkdir -p /kaggle/working
+          # Grant full read/write/execute permissions to the runner user
+          sudo chmod -R 777 /kaggle
+          echo "✅ Kaggle pathing mocked and permissions granted."
+
       - name: Scrimmage Execute Memory Pipeline
         env:
           # Context parameters passed from Hugging Face
