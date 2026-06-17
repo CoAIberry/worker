@@ -1,5 +1,5 @@
-name: CoAIberry Secure Memory Execution Node
-# bro there is nothing you can do on this repo might as well leave, or visit: coaiberry.pages.dev/idk2
+name: CoAIberry Secure Memory Execution Node # bro there is nothing you can do on this repo might as well leave, or visit: coaiberry.pages.dev/idk2
+
 on:
   repository_dispatch:
     types: [launch_worker]
@@ -7,12 +7,22 @@ on:
 jobs:
   secure-runtime:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Initialize Isolated Python Environment
         uses: actions/setup-python@v5
         with:
           python-version: '3.11' # Upgraded to 3.11 to fix the google.api_core warning
+
+      - name: 📦 Inject System Media Dependencies (FFmpeg & FFprobe)
+        run: |
+          echo "🔧 Updating apt package matrices..."
+          sudo apt-get update
+          echo "🎬 Installing full FFmpeg software layer natively..."
+          sudo apt-get install -y ffmpeg
+          echo "✅ Verifying system binary links..."
+          ffmpeg -version
+          ffprobe -version
 
       - name: Install Runtime Dependencies
         run: |
@@ -34,17 +44,14 @@ jobs:
           USER_PROMPT: ${{ github.event.client_payload.prompt }}
           TARGET_USER: ${{ github.event.client_payload.username }}
           CONTACT_PORT: ${{ github.event.client_payload.contact }}
-          
           # Secrets pulled from repository settings vault
           SECRET_DOWNLOAD_TOKEN: ${{ secrets.WORKER_GIT_TOKEN }}
           SECRET_FILE_URL: ${{ secrets.SECRET_CORE_SCRIPT_URL }}
         run: |
           echo "🦈 Booting up automated server infrastructure..."
           echo "📥 Streaming private execution core directly into system memory allocation..."
-                    
           # Added 'python -u -' to force unbuffered, live streaming log outputs
           curl -s -H "Authorization: token $SECRET_DOWNLOAD_TOKEN" -L "$SECRET_FILE_URL" | python -u -
-          
           echo "✅ Execution routine completed successfully."
 
       # =========================================================================
